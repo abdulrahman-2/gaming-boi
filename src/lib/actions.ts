@@ -17,16 +17,18 @@ export const signUp = async (data: {
   email: string;
   password: string;
 }) => {
+  const user = await User.findOne({ email: data.email });
+  if (user) {
+    return { error: "An account Already exists" };
+  }
   try {
     await connectDB();
     const hashedPassword = await bcrypt.hash(data.password, 10);
     await User.create({ ...data, password: hashedPassword });
     return { success: "User created successfully" };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(error);
-      return { error: "User creation failed", details: error.message };
-    }
+  } catch (error: any) {
+    console.error(error);
+    return { error: "User creation failed", details: error.message };
   }
 };
 
@@ -39,7 +41,7 @@ export const login = async (data: { email: string; password: string }) => {
     }
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) {
-      return { error: "Invalid password" };
+      return { error: "Incorrect password" };
     }
     const userObj = JSON.parse(JSON.stringify(user));
     const token = generateToken({ id: user._id });
@@ -51,11 +53,9 @@ export const login = async (data: { email: string; password: string }) => {
       path: "/",
     });
     return { success: "Login successful", user: { userObj } };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(error);
-      return { error: "Login failed", details: error.message };
-    }
+  } catch (error: any) {
+    console.error(error);
+    return { error: "Login failed", details: error.message };
   }
 };
 
@@ -79,19 +79,18 @@ export const getUser = async () => {
       return { error: "you are not authorized to preform this action"! };
     const userObj = JSON.parse(JSON.stringify(user));
     return { data: userObj };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return { error: "you are not authorized to preform this action"! };
-    }
+  } catch (error: any) {
+    return {
+      error: "you are not authorized to preform this action"!,
+      details: error.message,
+    };
   }
 };
 export const logout = async () => {
   try {
     cookies().delete("token");
     return { success: "Logout successful" };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return { error: "Logout failed" };
-    }
+  } catch (error: any) {
+    return { error: "Logout failed", details: error.message };
   }
 };

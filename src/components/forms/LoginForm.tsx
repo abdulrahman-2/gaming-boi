@@ -39,12 +39,11 @@ const LoginForm = () => {
         toast.success(res.success);
         setLoading(false);
         router.push("/");
+      } else if (res !== undefined && res.error) {
+        toast.error(res.error);
       }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.log(error);
-        toast.error(error.message);
-      }
+    } catch (error: any) {
+      toast.error(error);
     } finally {
       setLoading(false);
     }
