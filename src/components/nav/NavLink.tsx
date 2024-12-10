@@ -1,4 +1,4 @@
-import { LinkType } from "@/types/types";
+import { LinkType } from "@/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

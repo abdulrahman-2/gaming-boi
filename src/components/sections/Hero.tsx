@@ -4,7 +4,6 @@ import CardInfo from "../CardInfo";
 
 const items = [
   {
-    id: 1,
     src: "/poster.webp",
     card: (
       <section className="w-full h-full relative rounded-2xl overflow-hidden">
@@ -26,7 +25,6 @@ const items = [
     ),
   },
   {
-    id: 2,
     src: "/call-of-duty-black-ops-6-hero-desktop-01-en-21may24.webp",
     card: (
       <section className="w-full h-full relative rounded-2xl overflow-hidden">
@@ -51,7 +49,6 @@ const items = [
     ),
   },
   {
-    id: 3,
     src: "/Dragon-Ball-Sparking-Zero-Hero-desktop-01-03oct24.webp",
     card: (
       <section className="w-full h-full relative rounded-2xl overflow-hidden">
@@ -73,7 +70,6 @@ const items = [
     ),
   },
   {
-    id: 4,
     src: "/cyb.webp",
     card: (
       <section className="w-full h-full relative rounded-2xl overflow-hidden">

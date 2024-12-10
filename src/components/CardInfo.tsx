@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { CardInfoType } from "@/types/types";
+import { CardInfoType } from "@/types";
 import Image from "next/image";
 import MotionDiv from "./defaults/MotionDiv";
 
@@ -10,7 +10,6 @@ const CardInfo = ({
   textBtn,
   btnClasses,
 }: CardInfoType) => {
-  console.log(desc);
   return (
     <MotionDiv
       initial={{ opacity: 0, y: 40 }}
