@@ -4,6 +4,14 @@ import React, { useRef, useState, useEffect } from "react";
 import { IoMenu, IoClose } from "react-icons/io5";
 import NavLink from "./nav/NavLink";
 import { links } from "@/constant";
+import { FiLogOut } from "react-icons/fi";
+import CustomSkeleton from "./CustomSkeleton";
+import { IoMdSettings } from "react-icons/io";
+import { Button } from "./ui/button";
+import { useGetUser } from "@/lib/queryFunctions";
+import { useQueryClient } from "@tanstack/react-query";
+import { logout } from "@/lib/actions";
+import toast from "react-hot-toast";
 
 const ToggleMenu = () => {
   const [open, setOpen] = useState(false);
@@ -32,6 +40,19 @@ const ToggleMenu = () => {
 
   const toggleMenu = () => setOpen((prev) => !prev);
 
+  const { user, isLoading } = useGetUser();
+  const queryClient = useQueryClient();
+
+  const handleLogout = async () => {
+    const res = await logout();
+    if (res !== undefined && res.success) {
+      toast.success(res.success);
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    } else if (res !== undefined && res.error) {
+      toast.error(res.error);
+    }
+  };
+
   return (
     <div>
       {/* Hamburger Icon */}
@@ -49,7 +70,7 @@ const ToggleMenu = () => {
       {/* Side Menu */}
       <div
         ref={outsideRef}
-        className={`fixed top-0 left-0 z-50 w-[320px] min-h-screen bg-black/90 flex flex-col items-center justify-center transition-transform duration-300 transform ${
+        className={`fixed top-0 left-0 z-50 w-[310px] min-h-screen bg-black/90 flex flex-col items-center justify-center transition-transform duration-300 transform ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
         aria-hidden={!open}
@@ -71,6 +92,34 @@ const ToggleMenu = () => {
             {links.map((link) => (
               <NavLink link={link} key={link.href} />
             ))}
+            <div className="mt-auto">
+              {isLoading ? (
+                <CustomSkeleton />
+              ) : user?.data ? (
+                <div className="space-y-4">
+                  <NavLink
+                    link={{
+                      label: "Settings",
+                      href: "/settings",
+                      icon: <IoMdSettings size={22} />,
+                    }}
+                  />
+                  <div>
+                    <Button
+                      onClick={handleLogout}
+                      variant="destructive"
+                      className="w-full md:hidden lg:block rounded-full"
+                    >
+                      Logout
+                    </Button>
+                    <FiLogOut
+                      size={22}
+                      className="hidden md:block lg:hidden m-auto"
+                    />
+                  </div>
+                </div>
+              ) : null}
+            </div>
           </nav>
         </div>
       </div>

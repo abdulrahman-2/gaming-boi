@@ -16,9 +16,8 @@ import { Textarea } from "../ui/textarea";
 import { createReview } from "@/lib/actions";
 import toast from "react-hot-toast";
 import { Rating } from "@smastrom/react-rating";
-import '@smastrom/react-rating/style.css';
+import "@smastrom/react-rating/style.css";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 const reviewSchema = z.object({
   reviewText: z
@@ -40,9 +39,8 @@ interface ReviewFormProps {
 const ReviewForm = ({ gameId }: ReviewFormProps): JSX.Element => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [ratingValue, setRatingValue] = useState<number>(0);
-  const router = useRouter();
 
-  console.log('ratingValue:', ratingValue);
+  console.log("ratingValue:", ratingValue);
 
   const form = useForm<ReviewFormValues>({
     resolver: zodResolver(reviewSchema),
@@ -56,12 +54,11 @@ const ReviewForm = ({ gameId }: ReviewFormProps): JSX.Element => {
     try {
       setIsSubmitting(true);
       const res = await createReview({ ...data, gameId });
-      
+
       if (res?.success) {
         toast.success(res.success);
         form.reset();
         setRatingValue(0);
-        router.refresh();
       } else if (res?.error) {
         toast.error(res.error);
         if (res.details) {
@@ -79,7 +76,9 @@ const ReviewForm = ({ gameId }: ReviewFormProps): JSX.Element => {
   return (
     <div className="mt-10 w-full max-w-2xl mx-auto bg-gray-800/50 p-6 rounded-xl shadow-lg">
       <Form {...form}>
-        <h2 className="text-2xl font-semibold mb-6 text-gray-50">Write a Review</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-gray-50">
+          Write a Review
+        </h2>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <FormField
             control={form.control}
@@ -104,7 +103,7 @@ const ReviewForm = ({ gameId }: ReviewFormProps): JSX.Element => {
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="reviewText"
@@ -123,8 +122,8 @@ const ReviewForm = ({ gameId }: ReviewFormProps): JSX.Element => {
             )}
           />
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="w-full bg-rose-500 hover:bg-rose-600 text-white font-semibold py-2 rounded-xl transition-colors"
             disabled={isSubmitting}
           >

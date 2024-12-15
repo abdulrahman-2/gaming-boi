@@ -111,7 +111,7 @@ const Search = () => {
                     href={`/game/${game.id}`}
                     className="flex gap-3 items-start w-full h-full"
                   >
-                    <div className="rounded-2xl relative overflow-hidden w-[40%] bg-neutral-900 h-20">
+                    <div className="rounded-2xl relative overflow-hidden w-[200px] md:w-[300px] bg-neutral-900 h-28">
                       <Image
                         className="object-cover"
                         src={game.background_image || "/"}
