@@ -129,3 +129,13 @@ export interface Images {
   previous: string | null;
   results: ImageType[];
 }
+
+export interface ReviewProps {
+  name: string;
+  image: string;
+  reviewText: string;
+  date: string;
+  rating: number;
+  likes: number;
+  replies?: any;
+}

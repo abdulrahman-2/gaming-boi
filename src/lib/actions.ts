@@ -5,6 +5,8 @@ import bcrypt from "bcryptjs";
 import { connectDB } from "./mongodb";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import GameReview from "@/models/review";
+import { revalidatePath } from "next/cache";
 
 let decode;
 const JWT_EXPIRES = 90 * 60;
@@ -122,5 +124,116 @@ export const addToWishList = async (gameId: string) => {
     return { success: "Game added to wishlist" };
   } catch (error: any) {
     return { error: "Game addition failed", details: error.message };
+  }
+};
+
+// review
+export const createReview = async (data: {
+  gameId: string;
+  reviewText: string;
+  rating: string;
+}) => {
+  try {
+    await connectDB();
+    const { decode } = await protect();
+    if (!decode) {
+      return { error: "You are not authorized to perform this action!" };
+    }
+
+    const user = await User.findById((decode as any).id);
+    if (!user) {
+      return { error: "User not found!" };
+    }
+
+    // Ensure gameId is a string
+    const gameId = data.gameId.toString().trim();
+    const userId = user._id;
+
+    console.log('Debug - User:', userId.toString());
+    console.log('Debug - GameId:', gameId);
+
+    // Check if user has already reviewed this game
+    const existingReview = await GameReview.findOne({
+      userId: userId,
+      gameId: gameId
+    });
+
+    console.log('Debug - Existing Review:', existingReview);
+
+    if (existingReview) {
+      console.log('Debug - Found existing review');
+      return { error: "You have already reviewed this game" };
+    }
+
+    // Convert rating to number and validate
+    const rating = Number(data.rating);
+    if (isNaN(rating) || rating < 1 || rating > 5) {
+      return { error: "Rating must be a number between 1 and 5" };
+    }
+
+    // Create the review
+    const review = new GameReview({
+      gameId: gameId,
+      userId: userId,
+      reviewText: data.reviewText.trim(),
+      rating: rating
+    });
+
+    console.log('Debug - About to save review:', review);
+
+    // Save the review
+    await review.save();
+
+    console.log('Debug - Review saved successfully');
+
+    // Update user's gamesRating array
+    await User.findByIdAndUpdate(
+      userId,
+      { $push: { gamesRating: review._id } }
+    );
+
+    // Revalidate the page
+    revalidatePath(`/game/${gameId}`);
+
+    return { 
+      success: "Review created successfully", 
+      review 
+    };
+  } catch (error: any) {
+    console.error("Review creation error:", error);
+    
+    if (error.code === 11000 || error.message?.includes('duplicate key')) {
+      return { error: "You have already reviewed this game" };
+    }
+    
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map((err: any) => err.message);
+      return { error: messages.join(', ') };
+    }
+
+    return { 
+      error: "Review creation failed", 
+      details: error.message 
+    };
+  }
+};
+
+//get reviews
+export const getReviews = async (gameId?: string) => {
+  try {
+    await connectDB();
+    let query = {};
+    
+    if (gameId) {
+      query = { gameId };
+    }
+    
+    const reviews = await GameReview.find(query)
+      .populate('userId', 'name avatar')
+      .sort({ createdAt: -1 });
+      
+    return { success: "Reviews fetched successfully", reviews };
+  } catch (error: any) {
+    return { error: "Reviews fetch failed", details: error.message };
   }
 };

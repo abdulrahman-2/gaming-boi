@@ -49,7 +49,7 @@ const ToggleMenu = () => {
       {/* Side Menu */}
       <div
         ref={outsideRef}
-        className={`fixed top-0 left-0 z-50 w-[270px] min-h-screen bg-black/90 flex flex-col items-center justify-center transition-transform duration-300 transform ${
+        className={`fixed top-0 left-0 z-50 w-[320px] min-h-screen bg-black/90 flex flex-col items-center justify-center transition-transform duration-300 transform ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
         aria-hidden={!open}

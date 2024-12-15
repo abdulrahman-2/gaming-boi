@@ -1,24 +1,23 @@
+import ReviewForm from "@/components/forms/ReviewForm";
+import Review from "@/components/Review";
 import GamesSlider from "@/components/sections/GamesSlider";
 import SwiperCards from "@/components/SwiperCards";
+import AddToWishlist from "@/components/wishlist/AddToWishlist";
+import { getReviews} from "@/lib/actions";
 import { getGame } from "@/lib/api";
 import { Game, ImageType } from "@/types";
 import Image from "next/image";
 import React from "react";
 
-interface PageProps {
-  params: { id: string };
-}
-
-const GameDetailsPage = async ({ params }: PageProps) => {
+const GameDetailsPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
+  const allReviews = await getReviews(id);
 
   try {
     const game = await getGame(id);
-
     if (!game) {
       return <div className="text-white">Game not found</div>;
     }
-
     const {
       screenshots,
       data,
@@ -61,9 +60,46 @@ const GameDetailsPage = async ({ params }: PageProps) => {
           />
 
           <p className="mt-10 col-span-2">{data.description_raw}</p>
+
+          <AddToWishlist gameId={id} bigScreen />
         </div>
 
-        <GamesSlider title="Similar Games" games={similar.results} />
+        {/* reviews */}
+        <div className="mt-10">
+          <div className="flex items-center gap-2">
+            <h1 className="text-white text-2xl lg:text-4xl font-bold">
+              Reviews
+            </h1>
+            <span className="text-gray-400 text-xl lg:text-2xl">{`(${allReviews.reviews?.length || 0})`}</span>
+          </div>
+          {allReviews.reviews && allReviews.reviews.length > 0 ? (
+            allReviews.reviews.map((review) => {
+              const formattedDate = new Date(
+                review.createdAt
+              ).toLocaleDateString();
+
+              return (
+                <Review
+                  key={review._id}
+                  name={review.userId.name}
+                  image={review.userId.avatar.secure_url}
+                  reviewText={review.reviewText}
+                  date={formattedDate}
+                  rating={review.rating}
+                  likes={review.likes}
+                />
+              );
+            })
+          ) : (
+            <div className="text-white">No reviews yet</div>
+          )}
+
+          <ReviewForm gameId={id} />
+        </div>
+
+        {similar.results.length > 0 && (
+          <GamesSlider title="Similar Games" games={similar.results} />
+        )}
       </div>
     );
   } catch (error) {
