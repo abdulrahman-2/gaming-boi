@@ -6,18 +6,24 @@ const MotionDiv = ({
   children,
   className,
   initial,
+  whileInView,
   animate,
+  exit,
 }: {
   children: React.ReactNode;
   className?: string;
-  initial?: { opacity: number; y: number };
-  animate?: { opacity: number; y: number; transition: { duration: number } };
+  initial?: any;
+  animate?: any;
+  whileInView?: any;
+  exit?: any;
 }) => {
   return (
     <motion.div
       initial={initial}
-      whileInView={animate}
+      whileInView={whileInView}
+      animate={animate}
       className={`${className || ""}`}
+      exit={exit}
     >
       {children}
     </motion.div>

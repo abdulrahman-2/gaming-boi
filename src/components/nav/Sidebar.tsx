@@ -1,10 +1,7 @@
 "use client";
 
-import { FaCartShopping } from "react-icons/fa6";
-import { GoHomeFill } from "react-icons/go";
-import { IoMdHeart, IoMdSettings } from "react-icons/io";
+import { IoMdSettings } from "react-icons/io";
 import { FiLogOut } from "react-icons/fi";
-import { MdDashboard } from "react-icons/md";
 import NavLink from "./NavLink";
 import { LinkType } from "@/types";
 import Logo from "../defaults/Logo";
@@ -14,29 +11,7 @@ import { Button } from "../ui/button";
 import { logout } from "@/lib/actions";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
-
-const links = [
-  {
-    label: "Home",
-    href: "/",
-    icon: <GoHomeFill size={22} />,
-  },
-  {
-    label: "Games",
-    href: "/games",
-    icon: <MdDashboard size={22} />,
-  },
-  {
-    label: "Cart",
-    href: "/cart",
-    icon: <FaCartShopping size={22} />,
-  },
-  {
-    label: "wishlist",
-    href: "/wishlist",
-    icon: <IoMdHeart size={22} />,
-  },
-];
+import { links } from "@/constant";
 
 const Sidebar = () => {
   const { user, isLoading } = useGetUser();

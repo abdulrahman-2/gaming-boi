@@ -3,6 +3,8 @@ import Link from "next/link";
 import React from "react";
 import SwiperCards from "../SwiperCards";
 import { Game } from "@/types";
+import AddToWishlist from "../wishlist/AddToWishlist";
+import GamesHeading from "../GamesHeading";
 
 const GamesSlider = async ({
   games,
@@ -23,9 +25,7 @@ const GamesSlider = async ({
 }) => {
   return (
     <div className="mt-14">
-      <h1 className="text-white text-2xl lg:text-4xl font-bold mb-5">
-        {title}
-      </h1>
+      <GamesHeading title={title} link="Browse All Games" />
       <SwiperCards
         haveBreakpoints
         slidesPerView={slidesPerView}
@@ -55,7 +55,7 @@ const GamesSlider = async ({
                 </div>
               </div>
             ) : (
-              <Link href={`/game/${game.id}`} className="cursor-pointer group">
+              <div className="group">
                 <div
                   className="relative w-full h-[420px] rounded-2xl overflow-hidden
                     after:absolute after:inset-0 after:bg-black/50 after:z-10 after:w-0 after:h-full group-hover:after:w-full after:duration-300
@@ -67,11 +67,19 @@ const GamesSlider = async ({
                     fill
                     className="group-hover:scale-125 group-hover:rotate-6 duration-300 object-cover"
                   />
+                  <div className="absolute top-2 right-2 z-20">
+                    <AddToWishlist gameId={game.id.toString()} />
+                  </div>
                 </div>
-                <h1 className="text-white mt-2 text-lg font-semibold line-clamp-1">
-                  {game.name}
-                </h1>
-              </Link>
+                <Link
+                  href={`/game/${game.id}`}
+                  className="cursor-pointer group"
+                >
+                  <h1 className="text-white mt-2 text-lg font-semibold line-clamp-1">
+                    {game.name}
+                  </h1>
+                </Link>
+              </div>
             ),
           };
         })}

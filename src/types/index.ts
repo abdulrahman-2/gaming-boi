@@ -24,6 +24,7 @@ export interface Game {
   released: string;
   tba: boolean;
   background_image: string;
+  background_image_additional: string;
   rating: number;
   rating_top: number;
   ratings: Rating[];
@@ -47,7 +48,7 @@ export interface Game {
   clip: string | null;
   tags: Tag[];
   esrb_rating: EsrbRating | null;
-  short_screenshots: Screenshot[];
+  short_screenshots: Images;
 }
 
 export interface Rating {
@@ -109,7 +110,22 @@ export interface EsrbRating {
   slug: string;
 }
 
-export interface Screenshot {
+export interface WishlistType {
+  handleAddToWishlist: (gameId: string) => void;
+  wishlist: string[];
+}
+
+export interface ImageType {
   id: number;
+  height: number;
+  width: number;
   image: string;
+  is_deleted: boolean;
+}
+
+export interface Images {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: ImageType[];
 }

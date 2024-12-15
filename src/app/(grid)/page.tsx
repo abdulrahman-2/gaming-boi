@@ -37,7 +37,7 @@ const Home = async () => {
     <main className="mt-5 md:mt-7">
       <Hero />
 
-      <GamesSlider title="Top Games for PS5" games={ps5.data.results} />
+      <GamesSlider title="Top PS5 Games" games={ps5.data.results} />
       <GamesSlider title="Top Games" games={results} />
       <GamesSlider
         slidesPerView={1}
@@ -45,7 +45,7 @@ const Home = async () => {
         mdSlidesPerView={2}
         lgSlidesPerView={2}
         screenBig
-        title="PLAYSTATION EXCLUSIVES"
+        title="PLAYSTATION"
         games={customGames.map((game) => game.data)}
       />
       <GamesSlider title="Top PC Games" games={pc.data.results} />

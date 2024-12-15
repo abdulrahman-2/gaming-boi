@@ -9,7 +9,7 @@ const Logo = () => {
           <IoGameController className="text-white" size={40} />
         </span>
         <span className="text-xl lg:text-[23px] 2xl:text-3xl text-nowrap font-semibold mb-8 md:hidden lg:block">
-          <span className="text-rose-500">Gaming</span> Boi
+          <span className="text-rose-500">Game</span>Hub
         </span>
       </h2>
     </Link>

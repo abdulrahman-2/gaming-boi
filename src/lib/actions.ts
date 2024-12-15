@@ -94,3 +94,33 @@ export const logout = async () => {
     return { error: "Logout failed", details: error.message };
   }
 };
+
+export const removeFromWishList = async (gameId: string) => {
+  try {
+    await connectDB();
+    const { decode } = await protect();
+    const user = await User.findById((decode as any).id);
+    if (!user)
+      return { error: "you are not authorized to preform this action"! };
+    user.wishlist = user.wishlist.filter((id: string) => id !== gameId);
+    await user.save();
+    return { success: "Game removed from wishlist" };
+  } catch (error: any) {
+    return { error: "Game removal failed", details: error.message };
+  }
+};
+
+export const addToWishList = async (gameId: string) => {
+  try {
+    await connectDB();
+    const { decode } = await protect();
+    const user = await User.findById((decode as any).id);
+    if (!user)
+      return { error: "you are not authorized to preform this action"! };
+    user.wishlist.push(gameId);
+    await user.save();
+    return { success: "Game added to wishlist" };
+  } catch (error: any) {
+    return { error: "Game addition failed", details: error.message };
+  }
+};
